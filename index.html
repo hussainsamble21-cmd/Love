@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ذكرياتنا ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    background: url('romantic-candles-roses.jpg') center/cover no-repeat;
+    overflow-x:hidden;
+    transition: background 0.5s;
+    color:#fff;
+}
+
+.content-text, h1, #meetingDate, #days {
+    color:#fff;
+    transition: color 0.5s;
+}
+
+/* شاشة القفل مع الخلفية الخاصة بها */
+.lock-wrapper{
+    position:fixed; inset:0;
+    display:flex; justify-content:center; align-items:center;
+
+    background: url('lock-bg.jpg') center/cover no-repeat,
+                rgba(0,0,0,0.5);
+    background-blend-mode: darken;
+
+    z-index:9999;
+}
+
+.lock-box{
+    background: rgba(50,50,50,0.85);
+    padding:45px 30px;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    width:90%; max-width:380px;
+    transition: background 0.5s;
+}
+.lock-title{font-family:'Great Vibes',cursive; font-size:40px; color:#d63384; margin-bottom:25px;}
+.lock-box input{width:100%; padding:18px; font-size:22px; border-radius:12px; border:2px solid #d63384; text-align:center; margin-bottom:20px;}
+.heart-btn{width:100%; padding:15px; font-size:20px; border:none; border-radius:12px; background:#d63384; color:white; cursor:pointer;}
+
+ul{list-style:none; padding:0; display:flex; flex-wrap:wrap; justify-content:center; gap:15px;}
+a.folder{width:200px; height:140px; background-size:cover; background-position:center; border-radius:15px; font-size:22px; color:white; text-decoration:none; text-shadow:1px 1px 3px #000; display:flex; align-items:center; justify-content:center;}
+
+.music-folder{position:relative; width:200px; height:140px; background:url('music.jpg') center/cover no-repeat; border-radius:15px; margin:20px auto; display:flex; align-items:center; justify-content:center; cursor:pointer;}
+.music-folder button{font-size:20px; padding:10px 20px; border:none; border-radius:10px; background:#d63384; color:white; cursor:pointer;}
+.music-folder div{position:absolute; bottom:5px; width:100%; color:white; font-weight:bold; text-shadow:1px 1px 3px #000;}
+
+.heart{position:fixed; top:-20px; font-size:20px; animation:fall linear infinite; z-index:0;}
+@keyframes fall{to{transform:translateY(110vh);}}
+
+.darkModeBtn{
+    position:fixed;
+    top:15px;
+    left:15px;
+    z-index:10000;
+    font-size:20px;
+    padding:10px 15px;
+    border:none;
+    border-radius:10px;
+    background:#d63384;
+    color:white;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<button class="darkModeBtn" id="darkModeBtn">☀️</button>
+
+<!-- شاشة القفل -->
+<div id="lockScreen" class="lock-wrapper">
+    <div class="lock-box">
+        <div class="lock-title">Enter Your Birthday ❤️</div>
+        <input type="password" id="pass" placeholder="دخلي تاريخ ميلادك 🥰">
+        <button onclick="checkPass()" class="heart-btn">💟 دخول</button>
+    </div>
+</div>
+
+<!-- المحتوى الرئيسي --> 
+<div id="content" style="display:none;">
+    <h1 style="font-family: 'Great Vibes', cursive;">Our Beautiful Memories 💖</h1>
+    <div id="meetingDate" class="content-text"></div>
+    <div id="days" class="content-text"></div>
+
+    <ul>
+        <li><a href="section1.html" class="folder" style="background-image:url('msg.jpg');" onclick="setSubMusic('music1.mp3')">🥺❤ رسالة لروحي وقلبي </a></li>
+        <li><a href="section2.html" class="folder" style="background-image:url('love.jpg');" onclick="setSubMusic('music2.mp3')">🌚♥️ كلام من قلبي </a></li>
+        <li><a href="section3.html" class="folder" style="background-image:url('memories.jpg');" onclick="setSubMusic('music3.mp3')">🙈♥️ ذكرياتنا</a></li>
+        <li><a href="section4.html" class="folder" style="background-image:url('kids.jpg');" onclick="setSubMusic('music4.mp3')">🫂 اسماء اطفالنا</a></li>
+        <li><a href="section5.html" class="folder" style="background-image:url('surprise.jpg');" onclick="setSubMusic('music5.mp3')">🎁 مفاجأة</a></li>
+    </ul>
+
+    <div class="music-folder">
+        <button id="playBtn">▶️</button>
+        <div>اغنيه نحبها ❤</div>
+    </div>
+
+    <audio id="musicMain" loop>
+        <source src="music-main.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<script>
+let darkMode = true;
+const darkModeBtn = document.getElementById("darkModeBtn");
+const musicMain = document.getElementById("musicMain");
+const playBtn = document.getElementById("playBtn");
+
+// الوضع الداكن افتراضي
+document.body.style.background = "url('romantic-candles-roses.jpg') center/cover no-repeat";
+document.querySelectorAll(".lock-box").forEach(e=>e.style.background="rgba(50,50,50,0.85)");
+document.querySelectorAll(".content-text, h1, #meetingDate, #days").forEach(e=>e.style.color="#fff");
+darkModeBtn.textContent = "☀️";
+
+darkModeBtn.addEventListener("click", ()=>{
+    darkMode = !darkMode;
+    if(darkMode){
+        document.body.style.background = "url('romantic-candles-roses.jpg') center/cover no-repeat";
+        document.querySelectorAll(".lock-box").forEach(e=>e.style.background="rgba(50,50,50,0.85)");
+        darkModeBtn.textContent="☀️";
+    } else{
+        document.body.style.background = "url('romantic-candles-roses.jpg') center/cover no-repeat";
+        document.querySelectorAll(".lock-box").forEach(e=>e.style.background="white");
+        darkModeBtn.textContent="🌙";
+    }
+    document.querySelectorAll(".content-text, h1, #meetingDate, #days").forEach(e=>{ e.style.color="#fff"; });
+});
+
+function checkPass(){
+    if(document.getElementById("pass").value === "1582004"){
+        sessionStorage.setItem("unlocked","true");
+        openSite();
+        playMusicMain();
+    } else{
+        alert("كلمة السر غلط!");
+    }
+}
+
+function openSite(){
+    document.getElementById("lockScreen").style.display="none";
+    document.getElementById("content").style.display="block";
+    startHearts();
+    showDays();
+}
+
+function playMusicMain(){ musicMain.play().catch(()=>{}); playBtn.textContent="⏸️"; }
+function stopMusicMain(){ if(!musicMain.paused) musicMain.pause(); playBtn.textContent="▶️"; }
+
+playBtn.addEventListener("click", e=>{
+    e.stopPropagation();
+    if(musicMain.paused){ playMusicMain(); } else{ stopMusicMain(); }
+});
+
+window.addEventListener("pageshow", ()=>{
+    if(sessionStorage.getItem("unlocked")==="true"){
+        openSite();
+        playMusicMain();
+    }
+});
+
+function startHearts(){
+    for(let i=0;i<25;i++){
+        let h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML="❤️";
+        h.style.left=Math.random()*100+"%";
+        h.style.animationDuration=4+Math.random()*4+"s";
+        document.body.appendChild(h);
+    }
+}
+
+function showDays(){
+    const meeting = new Date("2023-05-06T10:00:00");
+    function updateTime(){
+        const now = new Date();
+        let diff = now - meeting;
+
+        const days = Math.floor(diff / (1000*60*60*24));
+        diff -= days * (1000*60*60*24);
+
+        const hours = Math.floor(diff / (1000*60*60));
+        diff -= hours * (1000*60*60);
+
+        const minutes = Math.floor(diff / (1000*60));
+        diff -= minutes * (1000*60);
+
+        const seconds = Math.floor(diff / 1000);
+
+        document.getElementById("meetingDate").innerHTML = "تاريخ لقائنا: 6 مايو 2023";
+        document.getElementById("days").innerHTML = 
+            `مدة علاقتنا: ${days} يوم، ${hours} ساعة، ${minutes} دقيقة، ${seconds} ثانية 💖`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+function setSubMusic(filename){ sessionStorage.setItem("subMusic", filename); }
+</script>
+
+</body>
+</html>

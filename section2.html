@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>📝 كلام من قلبي ♥️</title>
+<style>
+body{
+    margin:0;
+    display:flex;
+    justify-content:center;
+    font-family: Arial, sans-serif;
+    transition: background 0.5s, color 0.5s;
+    color:#fff; /* النصوص الداكنة افتراضيًا */
+}
+
+/* الوضع الداكن افتراضي */
+body.dark {
+    background: url('second-bg.jpg') center/cover no-repeat;
+    color:#fff;
+}
+
+/* الوضع الفاتح */
+body.light {
+    background: url('second-bg.jpg') center/cover no-repeat;
+    color:#000;
+}
+
+.phone-frame{
+    width:100%;
+    max-width:430px;
+    min-height:100vh;
+    background: rgba(0,0,0,0.7); /* داكن افتراضي */
+    padding:20px;
+    box-sizing:border-box;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+    transition: background 0.5s;
+}
+
+.phone-frame.light {
+    background: rgba(255,230,240,0.85); /* فاتح */
+}
+
+h1{
+    font-size:30px;
+    transition: color 0.5s;
+}
+
+p{
+    border-radius:10px;
+    padding:20px;
+    margin:20px auto;
+    text-align:right;
+    direction:rtl;
+    font-size:20px;
+    min-height:150px;
+    line-height:1.8;
+    transition: background 0.5s, color 0.5s;
+}
+
+/* ألوان النصوص حسب الوضع */
+body.dark p, body.dark h1 {
+    color:#fff;
+    background: rgba(0,0,0,0.5);
+}
+
+body.light p, body.light h1 {
+    color:#000;
+    background: rgba(255,255,255,0.7);
+}
+
+/* زر الموسيقى */
+#musicBtn{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:#d63384;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* زر الوضع الداكن/الفاتح */
+#themeBtn{
+    position:absolute;
+    top:15px;
+    left:15px;
+    background:#d63384;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* قلوب متحركة حقيقية */
+.heart-bg{
+    position:fixed;
+    font-size:20px;
+    top:-50px;
+    animation-name:fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.8;
+}
+@keyframes fall{
+    0%{top:-50px; transform:translateX(0) rotate(0deg);}
+    25%{transform:translateX(15px) rotate(90deg);}
+    50%{transform:translateX(-10px) rotate(180deg);}
+    75%{transform:translateX(20px) rotate(270deg);}
+    100%{top:110%; transform:translateX(0) rotate(360deg);}
+}
+</style>
+</head>
+<body class="dark">
+
+<div class="phone-frame" id="frame">
+
+<h1>📝 كلام من قلبي ♥️</h1>
+
+<p id="typeText"></p>
+
+<!-- زر الموسيقى -->
+<button id="musicBtn">⏸️</button>
+
+<!-- زر تبديل الوضع -->
+<button id="themeBtn">☀️</button>
+
+<!-- موسيقى خلفية جديدة -->
+<audio id="music" autoplay loop>
+  <source src="second-music.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+
+<script>
+// إنشاء قلوب واقعية
+const colors = ["#ff4d6d","#ff1a4b","#ff80aa","#ff0066"];
+for(let i=0;i<30;i++){
+    let heart = document.createElement("div");
+    heart.className="heart-bg";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random()*100+"%";
+    heart.style.fontSize = (10 + Math.random()*25) + "px";
+    heart.style.animationDuration = (4 + Math.random()*5) + "s";
+    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
+    heart.style.opacity = 0.5 + Math.random()*0.5;
+    document.body.appendChild(heart);
+}
+
+// تأثير الكتابة
+const text = `
+كلماتي لك صادقة من قلبي.
+أنت الأمان والسعادة، وكل لحظة بدونك ناقصة.
+أحبك ❤️
+`;
+
+let i = 0;
+function typeWriter(){
+    if(i < text.length){
+        document.getElementById("typeText").innerHTML += 
+            text.charAt(i) === "\n" ? "<br>" : text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+    }
+}
+typeWriter();
+
+// التحكم بالموسيقى
+const music = document.getElementById("music");
+const musicBtn = document.getElementById("musicBtn");
+
+musicBtn.addEventListener("click", function(){
+    if(music.paused){
+        music.play();
+        musicBtn.textContent = "⏸️";
+    } else {
+        music.pause();
+        musicBtn.textContent = "▶️";
+    }
+});
+
+// التحكم بالوضع الداكن/الفاتح
+const themeBtn = document.getElementById("themeBtn");
+const frame = document.getElementById("frame");
+themeBtn.addEventListener("click", ()=>{
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+    frame.classList.toggle("light");
+    themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+});
+</script>
+
+</body>
+</html>
